@@ -1,0 +1,124 @@
+﻿<ContentDialog
+  x:Class="TaskManagementApp.Dialogs.ItemDialog"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:TaskManagementApp.Dialogs"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  Title="Add New Item"
+  PrimaryButtonText="Add"
+  SecondaryButtonText="Cancel"
+  PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+  SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+  IsPrimaryButtonEnabled="False"
+  Background="#282828">
+
+  <!--Content dialog resources-->
+  <ContentDialog.Resources>
+    <Style TargetType="TextBox">
+      <Setter Property="Margin" Value="0, 5"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="IsSpellCheckEnabled" Value="False"/>
+    </Style>
+    <Style TargetType="CalendarDatePicker">
+      <Setter Property="Margin" Value="0, 5, 5, 5"/>
+      <Setter Property="Width" Value="148"/>
+    </Style>
+    <Style TargetType="TimePicker">
+      <Setter Property="Header" Value=" "/>
+      <Setter Property="Margin" Value="5, 5, 0, 5"/>
+    </Style>
+  </ContentDialog.Resources>
+
+  <!--Main dialog grid-->
+  <Grid Width="400">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!--Item type selection-->
+    <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 10">
+      <RadioButton x:Name="TaskRb" Content="Task" Checked="Rb_ItemTypeSelected"/>
+      <RadioButton x:Name="ApptRb" Content="Appointment" Checked="Rb_ItemTypeSelected"/>
+      <CheckBox x:Name="IsCompletedCheckbox" Content="Completed"
+                IsChecked="{Binding Path=IsCompleted, Mode=TwoWay}"
+                Visibility="Collapsed"/>
+    </StackPanel>
+
+    <!--Priority selection-->
+    <ComboBox  Grid.Row="1" Header="Priority" PlaceholderText="Choose a priority" Width="200"
+                Margin="0, 5" SelectedItem="{Binding Path=Priority, Mode=TwoWay}">
+      <x:Int32>1</x:Int32>
+      <x:Int32>2</x:Int32>
+      <x:Int32>3</x:Int32>
+      <x:Int32>4</x:Int32>
+      <x:Int32>5</x:Int32>
+    </ComboBox>
+
+    <!--Name textbox-->
+    <TextBox Grid.Row="2" x:Name="NameTextbox" Header="Name" PlaceholderText="Enter a name"
+             MaxLength="50" Text="{Binding Path=Name, Mode=TwoWay}"
+             TextChanged="NameTextbox_TextChanged"/>
+
+    <!--Description textbox-->
+    <TextBox Grid.Row="3" Header="Description" PlaceholderText="Enter a description"
+             MaxLength="100" Text="{Binding Path=Description, Mode=TwoWay}"/>
+
+    <!--DateTime selection grid-->
+    <Grid Grid.Row="4">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+
+      <!--Task deadline-->
+      <CalendarDatePicker x:Name="TaskDate"
+                          Header="Deadline"
+                          Date="{Binding Path=DeadlineDate, Mode=TwoWay}"/>
+      <TimePicker Grid.Column="1"
+                  Time="{Binding Path=DeadlineTime, Mode=TwoWay}"
+                  Visibility="{Binding ElementName=TaskDate, Path=Visibility}"/>
+
+      <!--Appointment start date and time-->
+      <CalendarDatePicker x:Name="ApptStartDate" Header="Start date and time"
+                          Date="{Binding Path=StartDate, Mode=TwoWay}" Visibility="Collapsed"/>
+      <TimePicker Grid.Column="1" Time="{Binding Path=StartTime, Mode=TwoWay}"
+                  Visibility="{Binding ElementName=ApptStartDate, Path=Visibility}"/>
+
+      <!--Appointment stop date and time-->
+      <CalendarDatePicker Grid.Row="1" Header="Stop date and time"
+                          Date="{Binding Path=StopDate, Mode=TwoWay}"
+                          Visibility="{Binding ElementName=ApptStartDate, Path=Visibility}"/>
+      <TimePicker Grid.Row="1" Grid.Column="1" Time="{Binding Path=StopTime, Mode=TwoWay}"
+                  Visibility="{Binding ElementName=ApptStartDate, Path=Visibility}"/>
+    </Grid>
+
+    <!--Appointment attendees grid-->
+    <Grid Grid.Row="5" Visibility="{Binding ElementName=ApptStartDate, Path=Visibility}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+
+      <!--Attendees name input box-->
+      <TextBox x:Name="AttendeesTextBox" Header="Attendees" PlaceholderText="Add a name here"
+               KeyDown="AttendeesTextBox_KeyDown" MaxLength="50"/>
+
+      <!--Attendees list-->
+      <ListBox x:Name="AttendeesList" Grid.Row="1" Height="100" Margin="0,5,0,0"
+               Visibility="Collapsed" ItemsSource="{Binding Path=Attendees}"
+               SelectionChanged="ListView_SelectionChanged"
+               SelectedItem="{x:Bind Path=SelectedAttendee, Mode=TwoWay}"/>
+    </Grid>
+  </Grid>
+</ContentDialog>

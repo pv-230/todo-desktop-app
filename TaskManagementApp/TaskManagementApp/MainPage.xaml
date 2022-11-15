@@ -1,0 +1,66 @@
+﻿<Page
+  x:Class="TaskManagementApp.MainPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:TaskManagementApp"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  Background="DimGray">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <!--Action buttons-->
+    <StackPanel Orientation="Horizontal" Background="Black">
+
+      <!--File button-->
+      <!--<AppBarButton Icon="OpenFile" Label="File">
+        <AppBarButton.Flyout>
+          <MenuBarItemFlyout Placement="RightEdgeAlignedTop">
+            <MenuFlyoutItem Text="Save" Click="FileButton_Click"/>
+            <MenuFlyoutItem Text="Load" Click="FileButton_Click"/>
+          </MenuBarItemFlyout>
+        </AppBarButton.Flyout>
+      </AppBarButton>-->
+
+      <!--Add button-->
+      <AppBarButton Icon="Add" Label="Add" Click="Add_Click"/>
+
+      <!--Edit button-->
+      <AppBarButton Icon="Edit" Label="Edit" Click="Edit_Click"
+                    IsEnabled="{Binding Path=HasSelection, UpdateSourceTrigger=PropertyChanged}"/>
+
+      <!--Delete button-->
+      <AppBarButton Icon="Delete" Label="Delete" Click="Delete_Click"
+                    IsEnabled="{Binding Path=HasSelection, UpdateSourceTrigger=PropertyChanged}"/>
+
+      <!--Sort button-->
+      <AppBarButton Icon="Sort" Label="Sort">
+        <AppBarButton.Flyout>
+          <MenuBarItemFlyout Placement="RightEdgeAlignedTop">
+            <MenuFlyoutItem Text="Name" Click="SortButton_Click"/>
+            <MenuFlyoutItem Text="Date" Click="SortButton_Click"/>
+            <MenuFlyoutItem Text="Priority" Click="SortButton_Click"/>
+          </MenuBarItemFlyout>
+        </AppBarButton.Flyout>
+      </AppBarButton>
+
+      <!--Filter toggle switch-->
+      <ToggleSwitch x:Name="ViewToggleSwitch" Margin="20, 0, 20, 0" Width="100"
+                    OffContent="All" OnContent="Active" Toggled="ToggleSwitch_Toggled"/>
+
+      <!--Search box-->
+      <TextBox x:Name="SearchBox" PlaceholderText="Search" Width="250" VerticalAlignment="Center"
+               TextChanged="SearchBox_TextChanged" MaxLength="50"/>
+    </StackPanel>
+
+    <!--List of items-->
+    <ListBox Grid.Row="1" ItemsSource="{Binding Path=FilteredItems}"
+              SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
+    </ListBox>
+  </Grid>
+</Page>
